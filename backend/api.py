@@ -1,4 +1,4 @@
-"""FastAPI backend for GreenDispatch — replaces Streamlit app.py as the data layer."""
+"""FastAPI backend for decarbify.rl — replaces Streamlit app.py as the data layer."""
 
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ _LIVE_EXECUTOR = ThreadPoolExecutor(max_workers=1)
 # ---------------------------------------------------------------------------
 # App
 # ---------------------------------------------------------------------------
-app = FastAPI(title="GreenDispatch API", version="2.0.0")
+app = FastAPI(title="decarbify.rl api", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,

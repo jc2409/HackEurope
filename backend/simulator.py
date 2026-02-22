@@ -1,5 +1,5 @@
 """
-SustainCluster evaluation wrapper for GreenDispatch.
+SustainCluster evaluation wrapper for decarbify.rl.
 
 Provides SustainClusterSimulator, a clean interface around the SustainCluster
 multi-datacenter RL training/evaluation framework.

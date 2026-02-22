@@ -13,8 +13,7 @@ export default function Header() {
       {/* Logo */}
       <div className="flex items-center gap-2 shrink-0">
         <span className="glow-green text-base">⬡</span>
-        <span className="font-semibold tracking-tight text-white/90">GreenDispatch</span>
-        <span className="micro-label text-white/20 hidden sm:inline">CARBON-AWARE SCHEDULER</span>
+        <span className="font-semibold tracking-tight text-white/90">decarbify.rl</span>
       </div>
 
       {/* Spacer */}
