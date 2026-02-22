@@ -1,5 +1,7 @@
 # decarbify.rl — rl-driven carbon-aware workload scheduler
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HSAqj3pCskQ?si=zRRqgnPtXogxTSOC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 decarbify.rl is a full-stack application that demonstrates how reinforcement learning can reduce the carbon footprint of AI workloads by intelligently routing jobs across a global fleet of datacenters.
 
 A pre-trained **Soft Actor-Critic (SAC)** RL agent observes real-time carbon intensity, electricity prices, temperature, and queue state for five geographically distributed datacenters. Every 15 minutes it decides: *which datacenter should run this job — or should we defer it and wait for a cleaner grid window?* The dashboard compares the RL agent head-to-head against two rule-based baselines, visualising exactly where workloads go and why.
