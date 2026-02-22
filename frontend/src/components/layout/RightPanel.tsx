@@ -168,36 +168,7 @@ export default function RightPanel({
         ) : null}
 
         {/* ── Strategy totals ───────────────────────────────────── */}
-        {summary.length > 0 && (
-          <>
-            <div className="mt-4" />
-            <SectionHead title="TOTAL EMISSIONS" />
-            {summary.map((row) => (
-              <StatLine
-                key={row.controller}
-                label={row.controller_label.replace(" (Geo+Time)", "").replace(" (Baseline)", "")}
-                value={`${fmtNum(row.total_co2_kg)} kg`}
-                color={STRATEGY_COLOR_BY_ID[row.controller] ?? "#888"}
-              />
-            ))}
-
-            <Divider />
-
-            <SectionHead title="SLA COMPLIANCE" />
-            {summary.map((row) => {
-              const compliance = 100 - row.sla_violation_rate_pct;
-              const slaColor = compliance >= 95 ? "#00FF9F" : "#F43F5E";
-              return (
-                <StatLine
-                  key={row.controller}
-                  label={row.controller_label.replace(" (Geo+Time)", "").replace(" (Baseline)", "")}
-                  value={`${compliance.toFixed(1)}%`}
-                  color={slaColor}
-                />
-              );
-            })}
-          </>
-        )}
+        {/* Removed: TOTAL EMISSIONS and SLA COMPLIANCE sections */}
 
         {/* Spacer pushes heatmap to bottom */}
         <div className="flex-1" />
