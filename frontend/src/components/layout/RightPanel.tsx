@@ -33,8 +33,8 @@ function StatLine({
     <div className="flex items-baseline justify-between gap-1 py-0.5">
       <span className="micro-label truncate max-w-[50%]">{label}</span>
       <span
-        className={mono ? "live-num text-xs font-semibold" : "text-xs font-semibold"}
-        style={{ color: color ?? "#E6EDF3" }}
+        className={`text-xs font-semibold ${mono ? "font-mono" : ""}`}
+        style={{ color: color ?? "#E6EDF3", fontFamily: mono ? "'Roboto Mono', monospace" : "inherit" }}
       >
         {value}
       </span>
@@ -70,10 +70,11 @@ export default function RightPanel({
 
   return (
     <aside
-      className="w-56 shrink-0 flex flex-col overflow-y-auto"
+      className="w-56 shrink-0 flex flex-col overflow-y-auto neon-card"
       style={{
         borderLeft: "1px solid #30363D",
         background: "#161B22",
+        margin: "8px 0 0 8px",
       }}
     >
       <div className="flex flex-col gap-0 p-3 h-full">

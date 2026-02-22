@@ -32,8 +32,8 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="w-52 shrink-0 flex flex-col overflow-hidden"
-      style={{ borderRight: "1px solid #30363D", background: "#161B22" }}
+      className="w-52 shrink-0 flex flex-col overflow-hidden neon-card"
+      style={{ borderRight: "1px solid #30363D", background: "#161B22", margin: "8px 8px 0 0" }}
     >
       {/* ── Config section ────────────────────────────────────────── */}
       <div className="flex flex-col gap-3 p-3 shrink-0">
@@ -91,37 +91,13 @@ export default function Sidebar() {
           </select>
         </div>
 
-        {/* Live toggle */}
-        <div className="flex items-center justify-between">
-          <span className="micro-label">Live Sim</span>
-          <button
-            onClick={() => setConfig({ useLive: !config.useLive })}
-            className="relative w-9 h-5 rounded-full transition-colors"
-            style={{
-              background: config.useLive ? "rgba(0,255,160,0.5)" : "rgba(255,255,255,0.08)",
-              border: `1px solid ${config.useLive ? "#00FFA0" : "rgba(255,255,255,0.12)"}`,
-            }}
-          >
-            <span
-              className="absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow transition-transform"
-              style={{ transform: config.useLive ? "translateX(16px)" : "translateX(0)" }}
-            />
-          </button>
-        </div>
-      </div>
-
-      {/* ── Agent log terminal — fills remaining height ─────────────── */}
+        {/* Agent log terminal — fills remaining height ─────────────── */}
       <div className="flex flex-col flex-1 min-h-0 px-3 pb-3">
-        <div className="micro-label mb-1 flex items-center justify-between shrink-0">
-          <span>AGENT LOG</span>
-          {logEntries.length > 0 && (
-            <button
-              onClick={clearLog}
-              className="micro-label text-white/20 hover:text-white/50 transition-colors"
-            >
-              CLR
-            </button>
-          )}
+        <div
+          className="font-semibold tracking-wide text-white/80 pt-1 pb-2 shrink-0"
+          style={{ fontSize: 15 }}
+        >
+          AGENT LOG
         </div>
 
         <div
@@ -144,7 +120,7 @@ export default function Sidebar() {
             </span>
           ) : (
             logEntries.map((e) => (
-              <div key={e.id}>
+              <div key={e.id} className="log-entry">
                 <span style={{ color: "#8B949E" }}>[{e.simTime}]</span>
                 {" "}
                 <span style={{ color: e.color }}>{e.text}</span>

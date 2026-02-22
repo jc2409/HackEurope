@@ -39,19 +39,20 @@
 /* ── Utility classes ──────────────────────────────────────────────────── */
 @layer utilities {
   .glass-card {
-    background: rgba(22, 27, 34, 0.75);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(22, 27, 34, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid #30363D;
     border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   }
 
   .neon-card {
     background: rgba(22, 27, 34, 0.85);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(12px);
     border: 1px solid #30363D;
     border-radius: 12px;
-    box-shadow: 0 0 24px rgba(0, 255, 159, 0.08), inset 0 0 24px rgba(0, 0, 0, 0.30);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 24px rgba(0, 255, 159, 0.08);
   }
 
   .glow-green {
@@ -136,5 +137,49 @@
     font-family: 'Roboto Mono', monospace;
     font-variant-numeric: tabular-nums;
     transition: color 0.3s ease;
+  }
+
+  /* ── Glowing effects ───────────────────────────────────────────────── */
+  .neon-glow-green {
+    filter: drop-shadow(0 0 8px rgba(0, 255, 159, 0.8));
+  }
+
+  .neon-glow-amber {
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+  }
+
+  /* ── Animations ────────────────────────────────────────────────────── */
+  @keyframes log-entry-fade {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .log-entry {
+    animation: log-entry-fade 0.4s ease-out;
+  }
+
+  @keyframes marker-pulse {
+    0% {
+      transform: scale(1);
+      filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.4));
+    }
+    50% {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8));
+    }
+    100% {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8));
+    }
+  }
+
+  .marker-hover {
+    transition: all 200ms ease-in-out;
   }
 }

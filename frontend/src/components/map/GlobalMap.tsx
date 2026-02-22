@@ -118,6 +118,7 @@ export default function GlobalMap({ stepData, activeDcId }: Props) {
             >
               <div
                 style={{ position: "relative", cursor: "pointer" }}
+                className="marker-hover group"
                 onMouseEnter={handleMouseEnter(dc)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -148,10 +149,12 @@ export default function GlobalMap({ stepData, activeDcId }: Props) {
                     background: color,
                     boxShadow: `0 0 ${radius * 0.7}px ${glowColor}`,
                     border: dc.isActive
-                      ? "2px solid rgba(0,255,160,0.9)"
+                      ? "2px solid rgba(251, 191, 36, 0.9)"
                       : "1px solid rgba(255,255,255,0.18)",
-                    transition: "background 0.35s, box-shadow 0.35s",
+                    transition: "all 200ms ease-in-out",
+                    filter: dc.isActive ? "drop-shadow(0 0 8px rgba(251, 191, 36, 0.6))" : "none",
                   }}
+                  className="group-hover:scale-110"
                 />
 
                 {/* Label below dot */}
@@ -164,12 +167,12 @@ export default function GlobalMap({ stepData, activeDcId }: Props) {
                     fontSize: 9,
                     fontFamily: "Roboto Mono, monospace",
                     color: dc.isActive
-                      ? "rgba(0,255,160,0.95)"
+                      ? "rgba(251, 191, 36, 0.95)"
                       : "rgba(160,180,200,0.7)",
                     whiteSpace: "nowrap",
                     pointerEvents: "none",
                     textShadow: dc.isActive
-                      ? "0 0 6px rgba(0,255,160,0.6)"
+                      ? "0 0 6px rgba(251, 191, 36, 0.6)"
                       : "none",
                   }}
                 >

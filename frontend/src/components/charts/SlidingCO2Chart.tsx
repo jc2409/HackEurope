@@ -68,7 +68,7 @@ export default function SlidingCO2Chart({
         y: ys,
         line: {
           color: STRATEGY_COLORS[label] ?? "#888",
-          width: ctrl === "manual_rl" ? 2 : 1.5,
+          width: ctrl === "manual_rl" ? 2.5 : 1.5,
           shape: "spline" as const,
           smoothing: 0.7,
           dash: (ctrl === "local_only" ? "dash" : "solid") as any,
