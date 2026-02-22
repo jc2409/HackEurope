@@ -39,13 +39,13 @@ function buildLogEntry(
     return {
       simTime: ts,
       text: `DEFER ${totalDeferred}t -> ${best.datacenter} CI:${ci}`,
-      color: "#FF8C42",
+      color: "#2DD4BF",
     };
   }
   return {
     simTime: ts,
     text: `ROUTE ${best.datacenter} (${loc?.name ?? ""}) | CI:${ci} | ${tasks}t`,
-    color: best.carbon_intensity_gco2_kwh < 200 ? "#00FFA0" : "#94a3b8",
+    color: best.carbon_intensity_gco2_kwh < 200 ? "#00FF9F" : "#8B949E",
   };
 }
 

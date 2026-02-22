@@ -90,7 +90,7 @@ export default function GlobalMap({ stepData, activeDcId }: Props) {
         height: "100%",
         borderRadius: 12,
         overflow: "hidden",
-        background: "#0a0c10",
+        background: "#0B0E14",
       }}
     >
       {/* Map fills parent fully — renderWorldCopies=false prevents tile repetition */}
@@ -104,10 +104,10 @@ export default function GlobalMap({ stepData, activeDcId }: Props) {
       >
         {points.map((dc) => {
           const radius = dotRadius(dc.tasks);
-          const color = dc.isActive ? "#00FFA0" : ciColor(dc.ci);
+          const color = dc.isActive ? "#FBBF24" : ciColor(dc.ci);
           const glowColor = dc.isActive
-            ? "rgba(0,255,160,0.5)"
-            : "rgba(255,255,255,0.15)";
+            ? "rgba(251, 191, 36, 0.5)"
+            : "rgba(139, 148, 158, 0.15)";
 
           return (
             <Marker

@@ -17,15 +17,15 @@ export const STRATEGY_DISPLAY: Record<string, string> = {
 
 // Cyber neon palette for strategies
 export const STRATEGY_COLORS: Record<string, string> = {
-  "SAC RL Agent (Geo+Time)": "#00FFA0",
-  "Local Only (Baseline)":   "#FF4757",
-  "Lowest Carbon":           "#00D4FF",
+  "SAC RL Agent (Geo+Time)": "#00FF9F",
+  "Local Only (Baseline)":   "#F43F5E",
+  "Lowest Carbon":           "#FBBF24",
 };
 
 export const STRATEGY_COLOR_BY_ID: Record<string, string> = {
-  manual_rl:     "#00FFA0",
-  local_only:    "#FF4757",
-  lowest_carbon: "#00D4FF",
+  manual_rl:     "#00FF9F",
+  local_only:    "#F43F5E",
+  lowest_carbon: "#FBBF24",
 };
 
 export const CHECKPOINT_OPTIONS: { display: string; internal: string }[] = [
@@ -60,21 +60,21 @@ export const BASE_INTERVAL_MS = 300;      // base playback speed per step
 export const PLOTLY_DARK_LAYOUT: Partial<Layout> = {
   plot_bgcolor:  "rgba(0,0,0,0)",
   paper_bgcolor: "rgba(0,0,0,0)",
-  font: { color: "#94a3b8", family: "Roboto Mono, monospace", size: 11 },
+  font: { color: "#E6EDF3", family: "Roboto Mono, monospace", size: 11 },
   legend: { orientation: "h", yanchor: "bottom", y: 1.02, xanchor: "right", x: 1,
-            font: { size: 10 }, bgcolor: "rgba(0,0,0,0)" },
+            font: { size: 10, color: "#E6EDF3" }, bgcolor: "rgba(0,0,0,0)" },
   margin: { t: 32, b: 32, l: 52, r: 12 },
   xaxis: {
-    gridcolor: "rgba(0,255,160,0.06)",
-    zerolinecolor: "rgba(0,255,160,0.10)",
-    linecolor: "rgba(0,255,160,0.12)",
-    tickfont: { size: 10, color: "#4b5563" },
+    gridcolor: "rgba(48, 54, 61, 0.3)",
+    zerolinecolor: "#30363D",
+    linecolor: "#30363D",
+    tickfont: { size: 10, color: "#8B949E" },
   },
   yaxis: {
-    gridcolor: "rgba(0,255,160,0.06)",
-    zerolinecolor: "rgba(0,255,160,0.10)",
-    linecolor: "rgba(0,255,160,0.12)",
-    tickfont: { size: 10, color: "#4b5563" },
+    gridcolor: "rgba(48, 54, 61, 0.3)",
+    zerolinecolor: "#30363D",
+    linecolor: "#30363D",
+    tickfont: { size: 10, color: "#8B949E" },
   },
 };
 

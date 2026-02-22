@@ -66,9 +66,15 @@ export default function SlidingCO2Chart({
         mode: "lines" as const,
         x: xs,
         y: ys,
-        line: { color: STRATEGY_COLORS[label] ?? "#888", width: 2, shape: "spline" as const, smoothing: 0.7 },
+        line: {
+          color: STRATEGY_COLORS[label] ?? "#888",
+          width: ctrl === "manual_rl" ? 2 : 1.5,
+          shape: "spline" as const,
+          smoothing: 0.7,
+          dash: (ctrl === "local_only" ? "dash" : "solid") as any,
+        },
         fill: ctrl === "manual_rl" ? ("tozeroy" as const) : ("none" as const),
-        fillcolor: ctrl === "manual_rl" ? "rgba(0,255,160,0.06)" : undefined,
+        fillcolor: ctrl === "manual_rl" ? "rgba(0, 255, 159, 0.08)" : undefined,
       };
     });
   }, [allPerDc, playbackStep, maxStep, strategies]);

@@ -34,7 +34,7 @@ function StatLine({
       <span className="micro-label truncate max-w-[50%]">{label}</span>
       <span
         className={mono ? "live-num text-xs font-semibold" : "text-xs font-semibold"}
-        style={{ color: color ?? "rgba(255,255,255,0.75)" }}
+        style={{ color: color ?? "#E6EDF3" }}
       >
         {value}
       </span>
@@ -44,7 +44,7 @@ function StatLine({
 
 function SectionHead({ title }: { title: string }) {
   return (
-    <div className="micro-label tracking-widest text-cyber-green/60 pt-1 pb-0.5">
+    <div className="tracking-widest text-white/70 pt-1 pb-0.5 text-xs font-semibold" style={{ color: "#E6EDF3" }}>
       {title}
     </div>
   );
@@ -72,15 +72,15 @@ export default function RightPanel({
     <aside
       className="w-56 shrink-0 flex flex-col overflow-y-auto"
       style={{
-        borderLeft: "1px solid rgba(0,255,160,0.08)",
-        background: "rgba(10,12,16,0.70)",
+        borderLeft: "1px solid #30363D",
+        background: "#161B22",
       }}
     >
       <div className="flex flex-col gap-0 p-3 h-full">
         {/* ── Panel header ──────────────────────────────────────── */}
         <div className="mb-3 pt-1">
           <div
-            className="font-semibold tracking-wide glow-green"
+            className="font-semibold tracking-wide text-white/80"
             style={{ fontSize: 15 }}
           >
             ANALYTICS
@@ -166,6 +166,7 @@ export default function RightPanel({
         {/* ── Strategy totals ───────────────────────────────────── */}
         {summary.length > 0 && (
           <>
+            <div className="mt-4" />
             <SectionHead title="TOTAL EMISSIONS" />
             {summary.map((row) => (
               <StatLine
@@ -179,20 +180,18 @@ export default function RightPanel({
             <Divider />
 
             <SectionHead title="SLA COMPLIANCE" />
-            {summary.map((row) => (
-              <StatLine
-                key={row.controller}
-                label={row.controller_label.replace(" (Geo+Time)", "").replace(" (Baseline)", "")}
-                value={`${(100 - row.sla_violation_rate_pct).toFixed(1)}%`}
-                color={
-                  row.sla_violation_rate_pct < 3
-                    ? "#00FFA0"
-                    : row.sla_violation_rate_pct < 8
-                    ? "#FF8C42"
-                    : "#FF4757"
-                }
-              />
-            ))}
+            {summary.map((row) => {
+              const compliance = 100 - row.sla_violation_rate_pct;
+              const slaColor = compliance >= 95 ? "#00FF9F" : "#F43F5E";
+              return (
+                <StatLine
+                  key={row.controller}
+                  label={row.controller_label.replace(" (Geo+Time)", "").replace(" (Baseline)", "")}
+                  value={`${compliance.toFixed(1)}%`}
+                  color={slaColor}
+                />
+              );
+            })}
           </>
         )}
 

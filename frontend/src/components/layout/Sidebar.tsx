@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useSimStore } from "@/store/useSimStore";
-import { runSimulation } from "@/api/client";
 import { CHECKPOINT_OPTIONS } from "@/constants";
 import type { StrategyId } from "@/types";
 
@@ -14,44 +13,16 @@ export default function Sidebar() {
   const {
     config,
     setConfig,
-    setLoading,
-    setResults,
-    setError,
-    isLoading,
-    setIsPlaying,
     logEntries,
     clearLog,
   } = useSimStore();
 
   const logRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll log to bottom whenever entries change
   useEffect(() => {
     const el = logRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [logEntries]);
-
-  const handleRun = async () => {
-    if (config.strategies.length === 0) return;
-    setIsPlaying(false);
-    clearLog();
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await runSimulation({
-        strategies: config.strategies,
-        eval_days: config.evalDays,
-        checkpoint_name: config.checkpointName,
-        seed: 42,
-        use_live: config.useLive,
-      });
-      setResults(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Simulation failed");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const toggleStrategy = (id: StrategyId) => {
     const cur = config.strategies;
@@ -62,11 +33,16 @@ export default function Sidebar() {
   return (
     <aside
       className="w-52 shrink-0 flex flex-col overflow-hidden"
-      style={{ borderRight: "1px solid rgba(0,255,160,0.08)", background: "rgba(10,12,16,0.6)" }}
+      style={{ borderRight: "1px solid #30363D", background: "#161B22" }}
     >
-      {/* ── Fixed config section ────────────────────────────────────── */}
+      {/* ── Config section ────────────────────────────────────────── */}
       <div className="flex flex-col gap-3 p-3 shrink-0">
-        <div className="micro-label tracking-widest text-center pt-1">CONFIG</div>
+        <div
+          className="font-semibold tracking-wide text-white/80 pt-1"
+          style={{ fontSize: 15 }}
+        >
+          CONFIG
+        </div>
 
         {/* Strategies */}
         <div>
@@ -135,7 +111,7 @@ export default function Sidebar() {
       </div>
 
       {/* ── Agent log terminal — fills remaining height ─────────────── */}
-      <div className="flex flex-col flex-1 min-h-0 px-3 pb-1">
+      <div className="flex flex-col flex-1 min-h-0 px-3 pb-3">
         <div className="micro-label mb-1 flex items-center justify-between shrink-0">
           <span>AGENT LOG</span>
           {logEntries.length > 0 && (
@@ -152,8 +128,8 @@ export default function Sidebar() {
           ref={logRef}
           className="flex-1 min-h-0 overflow-y-auto"
           style={{
-            background: "rgba(0,0,0,0.45)",
-            border: "1px solid rgba(0,255,160,0.08)",
+            background: "rgba(22, 27, 34, 0.6)",
+            border: "1px solid #30363D",
             borderRadius: 6,
             padding: "6px 8px",
             fontFamily: "Roboto Mono, monospace",
@@ -163,30 +139,19 @@ export default function Sidebar() {
           }}
         >
           {logEntries.length === 0 ? (
-            <span style={{ color: "rgba(255,255,255,0.12)" }}>
+            <span style={{ color: "#8B949E" }}>
               awaiting simulation...
             </span>
           ) : (
             logEntries.map((e) => (
               <div key={e.id}>
-                <span style={{ color: "rgba(255,255,255,0.22)" }}>[{e.simTime}]</span>
+                <span style={{ color: "#8B949E" }}>[{e.simTime}]</span>
                 {" "}
                 <span style={{ color: e.color }}>{e.text}</span>
               </div>
             ))
           )}
         </div>
-      </div>
-
-      {/* ── Run button ──────────────────────────────────────────────── */}
-      <div className="p-3 pt-2 shrink-0">
-        <button
-          onClick={handleRun}
-          disabled={config.strategies.length === 0 || isLoading}
-          className="btn-cyber w-full py-2 disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          {isLoading ? "Loading…" : "▶ RUN"}
-        </button>
       </div>
     </aside>
   );
