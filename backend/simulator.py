@@ -16,6 +16,7 @@ from typing import List, Tuple
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn.functional as F
 
 logger = logging.getLogger(__name__)
 
@@ -231,6 +232,8 @@ class SustainClusterSimulator:
         -------
         actions : int  (single-action mode)  or  list[int]  (multi-task mode)
         deferred_count : int   number of tasks deferred this step
+        action_probs : list[float]  mean probability distribution over actions
+            (averaged across tasks in multi-task mode; empty list for non-RL steps)
         """
         deferred_count = 0
 
@@ -239,23 +242,26 @@ class SustainClusterSimulator:
             with torch.no_grad():
                 logits = actor(obs_t)
             action = torch.argmax(logits, dim=-1).item()
+            probs = F.softmax(logits, dim=-1).squeeze(0).cpu().numpy().tolist()
             if not disable_defer and action == 0:
-                deferred_count = 1   # single action affects all current tasks
-            return action, deferred_count
+                deferred_count = 1
+            return action, deferred_count, probs
 
         # Multi-task mode: obs is a list of per-task observation arrays.
         if len(obs) == 0:
-            return [], 0
+            return [], 0, []
 
         obs_t = torch.FloatTensor(np.array(obs))   # [k_t, obs_dim]
         with torch.no_grad():
             logits = actor(obs_t)
         actions = torch.argmax(logits, dim=-1).cpu().numpy().tolist()
+        # Average softmax probabilities across all tasks for this timestep
+        probs = F.softmax(logits, dim=-1).mean(dim=0).cpu().numpy().tolist()
 
         if not disable_defer:
             deferred_count = sum(1 for a in actions if a == 0)
 
-        return actions, deferred_count
+        return actions, deferred_count, probs
 
     # ------------------------------------------------------------------
     # Public API
@@ -355,13 +361,14 @@ class SustainClusterSimulator:
 
                 for t in range(num_steps):
                     if is_rl and actor is not None:
-                        actions, deferred = self._select_actions(
+                        actions, deferred, action_probs = self._select_actions(
                             actor, obs, single_action_mode, disable_defer
                         )
                         total_deferred += deferred
                     else:
                         # RBC: env handles routing internally; pass empty action list.
                         actions = []
+                        action_probs = []
 
                     obs, _reward, done, truncated, info = env.step(actions)
 
@@ -402,6 +409,7 @@ class SustainClusterSimulator:
                         "transmission_cost_usd":      info.get("transmission_cost_total_usd", 0.0),
                         "transmission_energy_kwh":    info.get("transmission_energy_total_kwh", 0.0),
                         "transmission_emissions_kg":  info.get("transmission_emissions_total_kg", 0.0),
+                        "action_probs":               action_probs,
                     })
 
                     if done or truncated:

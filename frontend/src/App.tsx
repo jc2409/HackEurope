@@ -85,6 +85,13 @@ export default function App() {
     ? getStepData("manual_rl").concat(getStepData("local_only"))
     : [];
 
+  // Action probabilities for the current step from the RL agent
+  const actionProbs: number[] = results
+    ? (results.global_metrics.find(
+        (r) => r.timestep === playbackStep && r.controller === "manual_rl"
+      )?.action_probs ?? [])
+    : [];
+
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       {isLoading && <LoadingSpinner />}
@@ -153,6 +160,7 @@ export default function App() {
           playbackStep={playbackStep}
           maxStep={maxStep}
           summary={results?.summary ?? []}
+          actionProbs={actionProbs}
         />
       </div>
     </div>

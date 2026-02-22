@@ -164,6 +164,12 @@
     animation: log-entry-fade 0.4s ease-out;
   }
 
+  @keyframes bar-pulse {
+    0%   { filter: brightness(1); }
+    40%  { filter: brightness(2) drop-shadow(0 0 6px currentColor); }
+    100% { filter: brightness(1); }
+  }
+
   @keyframes marker-pulse {
     0% {
       transform: scale(1);

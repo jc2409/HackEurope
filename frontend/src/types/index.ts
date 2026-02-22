@@ -29,6 +29,7 @@ export interface GlobalRow {
   transmission_cost_usd: number;
   transmission_energy_kwh: number;
   transmission_emissions_kg: number;
+  action_probs: number[];
 }
 
 export interface SummaryRow {

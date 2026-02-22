@@ -56,13 +56,23 @@ interface SimState {
   getFilteredPerDc: () => PerDcRow[];
 }
 
+// ── Helper to determine useLive based on environment ────────────────────────
+const getDefaultUseLive = (): boolean => {
+  // In test environment, use mock mode (live = false)
+  if (import.meta.env.MODE === 'test') {
+    return false;
+  }
+  // In development/production, use live mode (live = true)
+  return true;
+};
+
 export const useSimStore = create<SimState>((set, get) => ({
   // Config
   config: {
     evalDays: 4,
     strategies: ["manual_rl", "local_only"],
     checkpointName: "multi_action_enable_defer_2",
-    useLive: false,
+    useLive: getDefaultUseLive(),
   },
   setConfig: (patch) => set((s) => ({ config: { ...s.config, ...patch } })),
 

@@ -92,6 +92,8 @@ export default function Sidebar() {
         </div>
 
         {/* Agent log terminal — fills remaining height ─────────────── */}
+      </div>
+
       <div className="flex flex-col flex-1 min-h-0 px-3 pb-3">
         <div
           className="font-semibold tracking-wide text-white/80 pt-1 pb-2 shrink-0"

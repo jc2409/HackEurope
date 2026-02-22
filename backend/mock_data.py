@@ -277,6 +277,52 @@ def _sla_violations(controller: str, tasks: int, capacity_ratio: float,
     return met, violated
 
 
+def _generate_mock_action_probs(
+    avg_ci: float, rng: np.random.RandomState, n_actions: int = 6
+) -> list[float]:
+    """
+    Generate mock action probability distribution for the SAC agent.
+
+    Simulates a reasonable policy where:
+    - Action 0 (DEFER) is favored when CI is high (carbon-aware)
+    - Actions 1-n (DISPATCH to various DCs) are favored when CI is low
+    - Some entropy/uncertainty is always present (stochastic policy)
+
+    Parameters
+    ----------
+    avg_ci : float
+        Average carbon intensity across DCs (used to bias action selection)
+    rng : np.random.RandomState
+        Random state for reproducibility
+    n_actions : int
+        Number of actions (default 6: 1 defer + 5 dispatch DCs)
+
+    Returns
+    -------
+    list[float]
+        Probability distribution over actions (sums to ~1.0)
+    """
+    entropy_factor = np.clip((avg_ci - 200) / 400.0, 0.0, 1.0)
+    base_entropy = 0.3 + entropy_factor * 0.4
+
+    defer_bias = np.clip((avg_ci - 250) / 150.0, -1.0, 1.0)
+
+    logits = np.zeros(n_actions)
+    logits[0] = defer_bias * 1.5
+
+    dispatch_base = -defer_bias * 0.8
+    for i in range(1, n_actions):
+        logits[i] = dispatch_base + rng.normal(0, 0.3)
+
+    logits += rng.normal(0, base_entropy)
+
+    logits = logits - np.max(logits)
+    exp_logits = np.exp(logits)
+    probs = exp_logits / np.sum(exp_logits)
+
+    return probs.tolist()
+
+
 # ── Main generator ───────────────────────────────────────────────────────────
 
 def generate_mock_comparison(
@@ -386,8 +432,12 @@ def generate_mock_comparison(
 
             # Global record
             transmission_cost = 0.0
+            action_probs = []
             if strategy == "manual_rl":
                 transmission_cost = float(strategy_rng.uniform(0.5, 2.5))
+                # Generate mock action probabilities for RL strategy
+                avg_ci = np.mean(list(ci_values.values()))
+                action_probs = _generate_mock_action_probs(avg_ci, strategy_rng, n_actions=6)
             elif strategy == "lowest_carbon":
                 transmission_cost = float(strategy_rng.uniform(1.0, 4.0))
 
@@ -399,6 +449,7 @@ def generate_mock_comparison(
                 "transmission_energy_kwh": transmission_cost * 0.3,
                 "transmission_emissions_kg": transmission_cost * 0.05,
                 "reward_this_step": float(strategy_rng.uniform(-1, 1)),
+                "action_probs": action_probs,
             })
 
         # Summary

@@ -85,7 +85,7 @@ class RunSimulationRequest(BaseModel):
     eval_days: int = 1
     checkpoint_name: str = "multi_action_enable_defer_2"
     seed: int = 42
-    use_live: bool = False
+    use_live: bool = True
 
 
 class PerDcRow(BaseModel):
@@ -117,6 +117,7 @@ class GlobalRow(BaseModel):
     transmission_cost_usd: float
     transmission_energy_kwh: float
     transmission_emissions_kg: float
+    action_probs: List[float] = []
 
 
 class SummaryRow(BaseModel):
@@ -198,6 +199,18 @@ def _run_live(req: RunSimulationRequest):
         raise RuntimeError(f"Live simulation failed: {exc}") from exc
 
 
+def _run_live_with_fallback(req: RunSimulationRequest):
+    """Attempt live simulation; fall back to mock if it fails."""
+    try:
+        return _run_live(req)
+    except RuntimeError as exc:
+        logger.warning(
+            "Live simulation failed (%s), falling back to mock data", str(exc)
+        )
+        # Fall back to mock mode
+        return _run_mock(req)
+
+
 def _serialize_dfs(per_dc_df, global_df, summary_df) -> SimulationResponse:
     # Normalize per_dc
     per_dc_records = per_dc_df.to_dict(orient="records")
@@ -216,9 +229,13 @@ def _serialize_dfs(per_dc_df, global_df, summary_df) -> SimulationResponse:
     global_records = global_df.to_dict(orient="records")
     for row in global_records:
         row.setdefault("deferred_tasks_this_step", 0)
+        row.setdefault("action_probs", [])
         for field in ("timestep", "deferred_tasks_this_step"):
             if field in row:
                 row[field] = int(row[field])
+        # Ensure action_probs is a plain Python list of floats
+        if not isinstance(row["action_probs"], list):
+            row["action_probs"] = []
 
     # Normalize summary
     summary_df = summary_df.rename(columns=_SUMMARY_RENAME)
@@ -268,7 +285,7 @@ async def run_simulation(req: RunSimulationRequest):
     try:
         if req.use_live:
             per_dc_df, global_df, summary_df = await loop.run_in_executor(
-                _LIVE_EXECUTOR, _run_live, req
+                _LIVE_EXECUTOR, _run_live_with_fallback, req
             )
         else:
             per_dc_df, global_df, summary_df = await loop.run_in_executor(

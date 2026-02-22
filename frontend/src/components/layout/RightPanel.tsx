@@ -1,6 +1,7 @@
 import type { PerDcRow, DcId, Savings, SummaryRow } from "@/types";
 import { DC_LOCATIONS, DC_IDS, STRATEGY_COLOR_BY_ID } from "@/constants";
 import { ciColor, fmtNum } from "@/utils/dataHelpers";
+import ActionProbHeatmap from "@/components/widgets/ActionProbHeatmap";
 
 interface RightPanelProps {
   stepData: PerDcRow[];        // current step, all strategies combined
@@ -12,6 +13,7 @@ interface RightPanelProps {
   playbackStep: number;
   maxStep: number;
   summary: SummaryRow[];
+  actionProbs: number[];
 }
 
 function Divider() {
@@ -60,6 +62,7 @@ export default function RightPanel({
   playbackStep,
   maxStep,
   summary,
+  actionProbs,
 }: RightPanelProps) {
   // Per-DC data at current step (map strategy)
   const dcRows = DC_IDS.map((dc_id) => {
@@ -196,8 +199,13 @@ export default function RightPanel({
           </>
         )}
 
-        {/* Spacer */}
+        {/* Spacer pushes heatmap to bottom */}
         <div className="flex-1" />
+
+        <Divider />
+
+        {/* ── Agent Policy Heatmap ──────────────────────────────────── */}
+        <ActionProbHeatmap actionProbs={actionProbs} />
       </div>
     </aside>
   );
